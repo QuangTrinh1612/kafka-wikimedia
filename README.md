@@ -36,3 +36,16 @@ This Java application processes and visualizes the Wikimedia recent changes stre
 - Open a browser and navigate to http://localhost:8080
 
 The application will automatically connect to the Wikimedia stream, process the data through Kafka, and display visualizations in your browser.
+
+## Test
+### Unit Tests
+- `WikimediaChangesProducerTest`: Tests the initialization of the producer component.
+- `WikimediaChangesHandlerTest`: Tests the event handler that processes messages from the Wikimedia stream and sends them to Kafka.
+- `WikimediaChangesConsumerTest`: Tests the consumer component that processes messages from Kafka and sends updates via WebSockets.
+- `WebSocketConfigTest`: Tests the WebSocket configuration and endpoint availability.
+- `KafkaTopicConfigTest`: Tests the Kafka topic configuration.
+- `WikimediaStreamingApplicationTest`: Tests that the application context loads correctly and all necessary beans are available.
+
+### Integration Tests
+- `KafkaIntegrationTest`: Tests the integration between the producer and consumer components using an embedded Kafka broker.
+- `WebSocketIntegrationTest`: Tests the WebSocket connection and subscription functionality.
