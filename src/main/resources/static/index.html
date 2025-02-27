@@ -3,73 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wikimedia Recent Changes Visualization</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            padding: 20px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .chart-container {
-            position: relative;
-            height: 300px;
-            margin-bottom: 30px;
-        }
-        .live-feed {
-            height: 400px;
-            overflow-y: auto;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
-        .event-card {
-            padding: 10px;
-            margin-bottom: 10px;
-            border-left: 4px solid #007bff;
-            background-color: white;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .counter {
-            font-size: 2rem;
-            font-weight: bold;
-            text-align: center;
-            color: #007bff;
-        }
-        .counter-label {
-            text-align: center;
-            font-size: 1rem;
-            color: #6c757d;
-        }
-    </style>
+    <title>Wikimedia Live Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="styles/style.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1 class="mb-4">Wikimedia Recent Changes Visualization</h1>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Wikimedia Live Dashboard</h1>
+            <p>Real-time monitoring of Wikimedia recent changes</p>
+        </div>
         
-        <div class="row mb-4">
+        <div class="row">
             <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div id="total-edits" class="counter">0</div>
-                        <div class="counter-label">Total Edits</div>
+                <div class="stat-card">
+                    <div class="d-flex align-items-center">
+                        <div class="icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div>
+                            <div class="counter-label">Total Edits</div>
+                            <div id="total-edits" class="counter">0</div>
+                            <div class="progress-bar-wrapper">
+                                <div id="total-edits-progress" class="progress-bar"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div id="edits-per-minute" class="counter">0</div>
-                        <div class="counter-label">Edits Per Minute</div>
+                <div class="stat-card">
+                    <div class="d-flex align-items-center">
+                        <div class="icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div>
+                            <div class="counter-label">Edits Per Minute</div>
+                            <div id="edits-per-minute" class="counter">0</div>
+                            <div class="progress-bar-wrapper">
+                                <div id="epm-progress" class="progress-bar"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div id="unique-users" class="counter">0</div>
-                        <div class="counter-label">Unique Users</div>
+                <div class="stat-card">
+                    <div class="d-flex align-items-center">
+                        <div class="icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <div class="counter-label">Unique Users</div>
+                            <div id="unique-users" class="counter">0</div>
+                            <div class="progress-bar-wrapper">
+                                <div id="users-progress" class="progress-bar"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -77,23 +68,53 @@
         
         <div class="row">
             <div class="col-md-6">
-                <h3>Top Wikis</h3>
-                <div class="chart-container">
-                    <canvas id="wikis-chart"></canvas>
+                <div class="chart-card">
+                    <h3>Top Wikis</h3>
+                    <div class="chart-container">
+                        <canvas id="wikis-chart"></canvas>
+                    </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <h3>Edit Types</h3>
-                <div class="chart-container">
-                    <canvas id="types-chart"></canvas>
+                <div class="chart-card">
+                    <h3>Edit Types</h3>
+                    <div class="chart-container">
+                        <canvas id="types-chart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div class="row mt-4">
+        <div class="row">
             <div class="col-md-12">
-                <h3>Live Feed</h3>
-                <div id="live-feed" class="live-feed"></div>
+                <div class="live-feed-card">
+                    <div class="live-feed-header">
+                        <h3 class="pulse-animation">Live Feed</h3>
+                        <div class="time-indicator" id="update-time">Last update: Just now</div>
+                    </div>
+                    <ul class="nav nav-tabs" id="feedTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="all-tab" data-bs-toggle="tab" href="#all" role="tab">All Edits</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="new-tab" data-bs-toggle="tab" href="#new" role="tab">New Pages</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="edit-tab" data-bs-toggle="tab" href="#edit" role="tab">Edits</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="all" role="tabpanel">
+                            <div id="live-feed-all" class="live-feed"></div>
+                        </div>
+                        <div class="tab-pane fade" id="new" role="tabpanel">
+                            <div id="live-feed-new" class="live-feed"></div>
+                        </div>
+                        <div class="tab-pane fade" id="edit" role="tabpanel">
+                            <div id="live-feed-edit" class="live-feed"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -101,6 +122,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
