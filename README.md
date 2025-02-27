@@ -21,10 +21,10 @@ This Java application processes and visualizes the Wikimedia recent changes stre
 ## Features
 - Bar chart showing top wikis by edit count
 - Doughnut chart showing edit types distribution
-![Dashboard Chart](src\main\resources\static\img\dashboard-landing-page.png)
+![Dashboard Chart](src/main/resources/static/img/dashboard-landing-page.png)
 
 - Live feed of recent changes
-![Dashboard Live Feed](src\main\resources\static\img\dashboard-live-feed.png)
+![Dashboard Live Feed](src/main/resources/static/img/dashboard-live-feed.png)
 
 - Counters for total edits, edits per minute, and unique users
 - Automatic reconnection if the WebSocket connection is lost
