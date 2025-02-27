@@ -6,10 +6,15 @@ import java.util.Map;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
 public class WikimediaChangesConsumer {
     private final ObjectMapper objectMapper;
     private final SimpMessagingTemplate messagingTemplate;
@@ -28,6 +33,8 @@ public class WikimediaChangesConsumer {
     @KafkaListener(topics = KafkaTopicConfig.TOPIC_NAME, groupId = "wikimedia-consumer-group")
     public void consume(String message) {
         try {
+            log.info("Consumed message: {}", message.substring(0, Math.min(message.length(), 100)) + "...");
+
             JsonNode rootNode = objectMapper.readTree(message);
             
             // Process and extract relevant data
@@ -69,6 +76,7 @@ public class WikimediaChangesConsumer {
         stats.put("editsByType", editsByType);
         
         messagingTemplate.convertAndSend("/topic/statistics", stats);
+        log.info("Sent statistics update. Total edits: {}", totalEdits);
     }
 
     private Map<String, Integer> getTopEntries(Map<String, Integer> map, int limit) {
